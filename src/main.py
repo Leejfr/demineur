@@ -6,6 +6,14 @@ from game import *
 import gameConfig
 
 def show_box(cell_line, cell_column, number_of_mines_near_current_cell):
+    """
+    Affiche une cellule qui a une mine a coté
+
+    Args:
+        cell_line (_type_): numero de ligne de la matrice
+        cell_column (_type_): numero de colonne de la matrice
+        number_of_mines_near_current_cell (_type_): nombre de mines à proximité
+    """
     game_window.blit(gameConfig.NO_MINE, (cell_column*30, cell_line*30))
     number_color = (0,0,255)
     if number_of_mines_near_current_cell > 1: number_color = (69,139,0)
@@ -15,16 +23,21 @@ def show_box(cell_line, cell_column, number_of_mines_near_current_cell):
 
           
 def show_empty_box(cell_line, cell_column):
+    """
+    Affiche un cellule sans mine a proximité
+    Etend l'affichage aux cellules proches ne contenant pas de mine
+
+    Args:
+        cell_line (_type_): numero de ligne de la matrice
+        cell_column (_type_): numero de colonne de la matrice
+    """
     list_cell_to_show = g.getAdjacentCellsWithoutMines(cell_line, cell_column)
     empty_boxes = []
     for (cell_to_show_line, cell_to_show_column, nb_mines) in list_cell_to_show : 
         game_window.blit(gameConfig.NO_MINE, (cell_to_show_column*30, cell_to_show_line*30))
         shown.append((cell_to_show_line, cell_to_show_column))
         if nb_mines > 0:
-            number_color = (0,0,255)
-            if nb_mines > 1: number_color = (69,139,0)
-            if nb_mines > 2: number_color = (255,48,48)
-            game_window.blit(pygame.font.SysFont("monospace", 16, bold=True).render(str(nb_mines), 1, number_color), (cell_to_show_column*30+10, cell_to_show_line*30+5))          
+            show_box(cell_to_show_line, cell_to_show_column, nb_mines)
         else:
             if cell_to_show_line != cell_line or cell_to_show_column != cell_column:
                 empty_boxes.append((cell_to_show_line, cell_to_show_column))
@@ -35,6 +48,9 @@ def show_empty_box(cell_line, cell_column):
         if (row, col) not in toshow : show_empty_box(row, col)
         
 def playGame():
+    """
+    Lance le jeu
+    """
     pygame.display.flip()
     loose = False
 
@@ -74,7 +90,7 @@ def playGame():
         
 
 """
-Lance le jeu
+Affiche le jeu
 """
 g = Game(10,10)
 #g.display()
